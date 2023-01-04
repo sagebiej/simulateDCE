@@ -1,0 +1,114 @@
+Design	Choice situation	alt1.species	alt1.toxin	alt1.origin	alt1.price	alt2.species	alt2.toxin	alt2.origin	alt2.price	Block	
+1	1	2	0	0	3	1	1	1	7	2	
+1	2	1	1	1	4	0	0	1	7	2	
+1	3	2	0	0	4	2	0	1	5	1	
+1	4	1	0	1	3	1	1	0	5	1	
+1	5	2	1	0	7	1	0	1	4	2	
+1	6	0	0	1	8	0	1	1	6	2	
+1	7	2	0	0	8	2	0	1	5	1	
+1	8	0	0	1	7	2	1	0	7	1	
+1	9	1	1	0	5	2	0	0	8	1	
+1	10	0	1	1	6	0	0	0	4	2	
+1	11	1	1	0	6	2	1	0	7	1	
+1	12	0	1	1	5	1	1	1	4	2	
+1	13	0	0	0	5	2	0	0	3	2	
+1	14	2	1	1	6	1	0	1	3	1	
+1	15	0	0	0	6	0	0	0	5	2	
+1	16	2	0	1	5	2	0	1	6	2	
+1	17	0	1	0	3	0	0	0	6	1	
+1	18	1	0	1	4	1	1	0	5	1	
+1	19	0	0	0	4	0	1	1	8	1	
+1	20	1	0	1	3	1	0	1	3	1	
+1	21	2	1	0	7	0	1	0	3	1	
+1	22	1	1	1	8	0	0	1	8	1	
+1	23	2	1	0	8	1	0	0	8	2	
+1	24	1	1	1	7	0	0	1	7	1	
+1	25	1	0	0	7	1	0	0	6	1	
+1	26	0	1	1	8	2	1	1	4	1	
+1	27	1	0	0	8	0	1	0	4	2	
+1	28	0	0	1	7	1	1	0	6	2	
+1	29	1	1	0	5	2	1	1	3	2	
+1	30	2	0	1	6	0	1	0	3	1	
+1	31	1	0	0	6	2	0	0	4	2	
+1	32	2	0	1	5	2	1	0	8	2	
+1	33	0	1	0	3	1	1	1	8	1	
+1	34	2	1	1	4	0	1	1	5	2	
+1	35	0	1	0	4	1	0	0	7	2	
+1	36	2	1	1	3	2	1	1	6	2	
+||||||||||
+design
+;alts = alt1*, alt2*, alt3
+;rows = 36
+;block = 2
+;orth = seq
+
+
+;con
+;model:
+U(alt1) = b1 +  b2 * Species[0,1,2] + b3 * Toxin[0,1]  + b4 * Origin[0,1] + b5 * Price[3:8:1]/
+U(alt2) = b1 +  b2 * Species        + b3 * Toxin       + b4 * Origin      + b5 * Price
+ 
+
+;formatTitle = 'Scenario <scenarionumber> Block <blocknumber>'
+;formatTableDimensions = 4, 6
+;formatTable:
+1,1 = '' /
+1,2 = 'Species' /
+1,3 = 'Toxin' /
+1,4 = 'Origin' /
+1,5 = 'Price' /
+1,6 = 'Choice question&:' /
+2,1 = 'alt1' /
+2,2 = '<alt1.species>' /
+2,3 = '<alt1.toxin>' /
+2,4 = '<alt1.origin>' /
+2,5 = '<alt1.price>' /
+2,6 = '' /
+3,1 = 'alt2' /
+3,2 = '<alt2.species>' /
+3,3 = '<alt2.toxin>' /
+3,4 = '<alt2.origin>' /
+3,5 = '<alt2.price>' /
+3,6 = '' /
+4,1 = 'No Buy' /
+4,2 = '' /
+4,3 = '' /
+4,4 = '' /
+4,5 = '' /
+4,6 = ''
+;formatTableStyle:
+1,1 = 'default' /
+1,2 = 'headingattribute' /
+1,3 = 'headingattribute' /
+1,4 = 'headingattribute' /
+1,5 = 'headingattribute' /
+1,6 = 'headingattribute' /
+2,1 = 'heading1' /
+2,2 = 'body1' /
+2,3 = 'body1' /
+2,4 = 'body1' /
+2,5 = 'body1' /
+2,6 = 'choice1' /
+3,1 = 'heading2' /
+3,2 = 'body2' /
+3,3 = 'body2' /
+3,4 = 'body2' /
+3,5 = 'body2' /
+3,6 = 'choice2' /
+4,1 = '' /
+4,2 = '' /
+4,3 = '' /
+4,4 = '' /
+4,5 = '' /
+4,6 = ''
+;formatStyleSheet = Default.css
+;formatAttributes:
+alt1.species(0=NP, 1=T, 2=C) /
+alt1.toxin(0=Yes, 1=No) /
+alt1.origin(0=Out, 1=Kisumu) /
+alt1.price(3=#, 4=#, 5=#, 6=#, 7=#, 8=#) /
+alt2.species(0=NP, 1=T, 2=C) /
+alt2.toxin(0=Yes, 1=No) /
+alt2.origin(0=Out, 1=Kisumu) /
+alt2.price(3=#, 4=#, 5=#, 6=#, 7=#, 8=#)
+$
