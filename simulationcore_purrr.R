@@ -1,7 +1,7 @@
 
 rm(list=ls())
 
-
+{#load
 
 library("tictoc")
 library("readr")
@@ -18,7 +18,8 @@ library("mixl")
 library("furrr")
 library("purrr")
 library("ggplot2")
-
+library("formula.tools")
+}
 
 
 
@@ -29,6 +30,10 @@ btoxin = 0.2
 bkisumu = 0.1
 bprice = -0.1
 
+
+v1 <-V.1~ basc + btilapia*alt1.tilapia + bcichlids * alt1.cichlids + btoxin * alt1.toxin + bkisumu * alt1.origin + bprice * alt1.price
+v2 <-V.2~ basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price
+v3 <-V.3~ 0
 
 mnl_U_test <- "
   
@@ -99,7 +104,7 @@ nblocks<-max(design$Block)
 setpp <- nsets/nblocks      # Choice Sets per respondent; in this 'no blocks' design everyone sees all 24 sets
 #respondents <- replications*nblocks
 replications <- respondents/nblocks
-
+browser()
 database<- design %>%
   arrange(Block,Choice.situation) %>% 
   slice(rep(row_number(), replications)) %>%    ## replicate design according to number of replications
@@ -107,9 +112,10 @@ database<- design %>%
   relocate(RID,`Choice.situation`) %>% 
   mutate( alt1.tilapia=alt1.species==1, alt2.tilapia=alt2.species==1,
           alt1.cichlids=alt1.species==2, alt2.cichlids=alt2.species==2,
-    V.1 = basc + btilapia*alt1.tilapia + bcichlids * alt1.cichlids + btoxin * alt1.toxin + bkisumu * alt1.origin + bprice * alt1.price , #Utility of alternative 1
-    V.2 = basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price ,  #Utility of alternative 2
-    V.3 = 0 ) %>% # utility of opt out, set to zero
+          !!lhs(v1) := !!rhs(v1) , #Utility of alternative 1
+          !!lhs(v2) := !!rhs(v2) ,
+          hgf = basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price ,  #Utility of alternative 2
+    !!lhs(v3) := !!rhs(v3) ) %>% # utility of opt out, set to zero
   rename(ID ="RID") %>%
   rename_with(~ stringr::str_replace(.,pattern = "\\.","_"), everything()) %>% 
   as.data.frame()
@@ -167,7 +173,7 @@ designname <- str_remove_all(designfile,"(.ngd|_)")  ## Make sure it designnames
 
 resps =330
 
-nosim=5000
+nosim=5
 
 plan(multisession, workers = 8)
 #plan(sequential)
