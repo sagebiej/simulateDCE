@@ -1,8 +1,10 @@
 ---
 title: "Simulation experimental design"
 author: "Julian Sagebiel"
-output: html_document
-date: '2023-01-05'
+date: "2023-01-05"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}

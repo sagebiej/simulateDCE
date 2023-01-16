@@ -1,12 +1,17 @@
-sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U ) {
+sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
+  
+  
+  by_formula <- function(equation){ #used to take formulas as inputs in simulation utility function
+    # //! cur_data_all may get deprecated in favor of pick
+    # pick(everything()) %>%
+    cur_data_all() %>%
+      transmute(!!lhs(equation) := !!rhs(equation) )
+  } 
   
   
   
   
-  
-  
-  
-  simulate_choices <- function(data=database) {
+  simulate_choices <- function(data=database) {  #the part in dataset that needs to be repeated in each run
     
     data <-  data %>% 
       group_by(ID) %>% 
@@ -65,9 +70,10 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U ) {
     relocate(RID,`Choice.situation`) %>% 
     mutate( alt1.tilapia=alt1.species==1, alt2.tilapia=alt2.species==1,
             alt1.cichlids=alt1.species==2, alt2.cichlids=alt2.species==2,
-            !!lhs(v1) := !!rhs(v1) , #Utility of alternative 1
-            !!lhs(v2) := !!rhs(v2) ,
-            !!lhs(v3) := !!rhs(v3),
+            map_dfc(utils,by_formula)
+            # !!lhs(utils[["v1"]]) := !!rhs(utils[["v1"]]) , #Utility of alternative 1
+            # !!lhs(utils[["v2"]]) := !!rhs(utils[["v2"]]) ,
+            # !!lhs(utils[["v3"]]) := !!rhs(utils[["v3"]]),
            # hgf = basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price   #Utility of alternative 2
     ) %>% # utility of opt out, set to zero
     rename(ID ="RID") %>%
@@ -125,7 +131,7 @@ plot_multi_histogram <- function(df, feature, label_column) {
   plt <- ggplot(df, aes(x=eval(parse(text=feature)), fill=eval(parse(text=label_column)))) +
     #geom_histogram(alpha=0.7, position="identity", aes(y = ..density..), color="black") +
     geom_density(alpha=0.5) +
-    geom_vline(aes(xintercept=mean(eval(parse(text=feature)))), color="black", linetype="dashed", size=1) +
+    geom_vline(aes(xintercept=mean(eval(parse(text=feature)))), color="black", linetype="dashed", linewidth=1) +
     labs(x=feature, y = "Density")
   plt + guides(fill=guide_legend(title=label_column))
 } 

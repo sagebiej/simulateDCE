@@ -21,8 +21,8 @@ library("ggplot2")
 library("formula.tools")
 }
 
-resps =330
-nosim=500
+resps =330  # number of respondents
+nosim=5  # number of simulations to run (about 500 is minimum)
 
 basc = 0.5
 btilapia = -0.2
@@ -31,10 +31,13 @@ btoxin = 0.2
 bkisumu = 0.1
 bprice = -0.1
 
+u<-list(
+v1 =V.1~ basc + btilapia*alt1.tilapia + bcichlids * alt1.cichlids + btoxin * alt1.toxin + bkisumu * alt1.origin + bprice * alt1.price,
+v2 =V.2~ basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price,
+v3 =V.3~ 0)
 
-v1 <-V.1~ basc + btilapia*alt1.tilapia + bcichlids * alt1.cichlids + btoxin * alt1.toxin + bkisumu * alt1.origin + bprice * alt1.price
-v2 <-V.2~ basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price
-v3 <-V.3~ 0
+
+
 
 mnl_U_test <- "
   
