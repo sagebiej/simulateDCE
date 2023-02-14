@@ -9,16 +9,22 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
   } 
   
   
-  
+
+   
+
   
   simulate_choices <- function(data=database) {  #the part in dataset that needs to be repeated in each run
-    
-    data <-  data %>% 
+   
+    n=seq_along(1:length(utils))
+      
+      data <-  data %>% 
       group_by(ID) %>% 
       mutate(
-        e_1 = rgumbel(setpp,loc=0, scale=1) ,
-        e_2 = rgumbel(setpp,loc=0, scale=1) ,
-        e_3 = rgumbel(setpp,loc=0, scale=1) ,
+        # e_1 = rgumbel(setpp,loc=0, scale=1) ,
+        # e_2 = rgumbel(setpp,loc=0, scale=1) ,
+        # e_3 = rgumbel(setpp,loc=0, scale=1) ,
+        across(.cols=n,.fns = ~ rgumbel(setpp,loc=0, scale=1), .names = "{'e'}_{n}" ), ## Here, I need to replace the 3 with lenght(utils)
+        across(.cols=starts_with("V_"), .fns= ~.x, .names = "{'U2'}_{n}") ,
         U_1 = V_1 + e_1 ,
         U_2 = V_2 + e_2 ,
         U_3 = V_3 + e_3 
@@ -26,6 +32,8 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
       as.data.frame()
     
     data$CHOICE <- max.col(data[,c("U_1" , "U_2" , "U_3" )])
+    
+    print(data)
     
     return(data)
     
@@ -70,7 +78,7 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
     relocate(RID,`Choice.situation`) %>% 
     mutate( alt1.tilapia=alt1.species==1, alt2.tilapia=alt2.species==1,
             alt1.cichlids=alt1.species==2, alt2.cichlids=alt2.species==2,
-            map_dfc(utils,by_formula)
+            map_dfc(utils,by_formula)   #our functions to create utility variables. They need to be entered as a formula list as an argument
             # !!lhs(utils[["v1"]]) := !!rhs(utils[["v1"]]) , #Utility of alternative 1
             # !!lhs(utils[["v2"]]) := !!rhs(utils[["v2"]]) ,
             # !!lhs(utils[["v3"]]) := !!rhs(utils[["v3"]]),
