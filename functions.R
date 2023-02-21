@@ -23,7 +23,7 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
         # e_1 = rgumbel(setpp,loc=0, scale=1) ,
         # e_2 = rgumbel(setpp,loc=0, scale=1) ,
         # e_3 = rgumbel(setpp,loc=0, scale=1) ,
-        across(.cols=n,.fns = ~ rgumbel(setpp,loc=0, scale=1), .names = "{'e'}_{n}" ), ## Here, I need to replace the 3 with lenght(utils)
+        across(.cols=n,.fns = ~ rgumbel(setpp,loc=0, scale=1), .names = "{'e'}_{n}" ), 
         across(.cols=starts_with("V_"), .fns= ~.x, .names = "{'U2'}_{n}") ,
         U_1 = V_1 + e_1 ,
         U_2 = V_2 + e_2 ,
@@ -135,7 +135,7 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
 }
 
 
-plot_multi_histogram <- function(df, feature, label_column) {
+plot_multi_histogram <- function(df, feature, label_column) { #function to create nice multi histograms, taken somewhere from the web
   plt <- ggplot(df, aes(x=eval(parse(text=feature)), fill=eval(parse(text=label_column)))) +
     #geom_histogram(alpha=0.7, position="identity", aes(y = ..density..), color="black") +
     geom_density(alpha=0.5) +
