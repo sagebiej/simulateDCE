@@ -21,11 +21,11 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
       group_by(ID) %>% 
       mutate(
         across(.cols=n,.fns = ~ rgumbel(setpp,loc=0, scale=1), .names = "{'e'}_{n}" ), 
-        across(starts_with("V_"), .names = "{'U'}_{n}") + across(starts_with("e_"))
+        across(starts_with("V_"), .names = "{'U'}_{n}") + across(starts_with("e_")) ) %>% ungroup() %>% 
+        mutate(CHOICE=max.col(.[,grep("U_",names(.))])
       )   %>% 
       as.data.frame()
-    
-    data$CHOICE <- max.col(data[,c("U_1" , "U_2" , "U_3" )])
+
     
     print(data)
     
