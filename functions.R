@@ -20,14 +20,8 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
       data <-  data %>% 
       group_by(ID) %>% 
       mutate(
-        # e_1 = rgumbel(setpp,loc=0, scale=1) ,
-        # e_2 = rgumbel(setpp,loc=0, scale=1) ,
-        # e_3 = rgumbel(setpp,loc=0, scale=1) ,
         across(.cols=n,.fns = ~ rgumbel(setpp,loc=0, scale=1), .names = "{'e'}_{n}" ), 
-        across(.cols=starts_with("V_"), .fns= ~.x, .names = "{'U2'}_{n}") ,
-        U_1 = V_1 + e_1 ,
-        U_2 = V_2 + e_2 ,
-        U_3 = V_3 + e_3 
+        across(starts_with("V_"), .names = "{'U'}_{n}") + across(starts_with("e_"))
       )   %>% 
       as.data.frame()
     
