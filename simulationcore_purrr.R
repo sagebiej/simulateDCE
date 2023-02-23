@@ -25,6 +25,7 @@ library("formula.tools")
 resps =330  # number of respondents
 nosim=5  # number of simulations to run (about 500 is minimum)
 
+# betacoefficients should not include "-"
 basc = 0.5
 btilapia = -0.2
 bcichlids = -0.3
@@ -32,21 +33,25 @@ btoxin = 0.2
 bkisumu = 0.1
 bprice = -0.1
 
+
+#place your utility functions here
 u<-list(
 v1 =V.1~ basc + btilapia*alt1.tilapia + bcichlids * alt1.cichlids + btoxin * alt1.toxin + bkisumu * alt1.origin + bprice * alt1.price,
 v2 =V.2~ basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price,
 v3 =V.3~ 0)
 
 
+mnl_U <-paste(map_chr(u,as.character,keep.source.attr = TRUE),collapse = "",";") %>%
+  str_replace_all( c("~" = "=", "\\." = "_" , " b" = " @b_" , "V."="U_", "alt"="$alt"))
 
-
-mnl_U_test <- "
   
-    U_1 = @b_asc + @b_tilapia*$alt1_tilapia + @b_cichlids * $alt1_cichlids + @b_toxin * $alt1_toxin + @b_kisumu * $alt1_origin + @b_price * $alt1_price ;
-    U_2 = @b_asc + @b_tilapia*$alt2_tilapia + @b_cichlids * $alt2_cichlids + @b_toxin * $alt2_toxin + @b_kisumu * $alt2_origin + @b_price * $alt2_price ; 
-    U_3 = 0 ;
-    
-  "  
+
+### in case you want the estimated function to differ from the actual function, use this code: 
+
+# mnl_U <- "U_1 = @b_asc + @b_tilapia * $alt1_tilapia + @b_cichlids * $alt1_cichlids + @b_toxin * $alt1_toxin + @b_kisumu * $alt1_origin + @b_price * $alt1_price ;
+#           U_2 = @b_asc + @b_tilapia * $alt2_tilapia + @b_cichlids * $alt2_cichlids + @b_toxin * $alt2_toxin + @b_kisumu * $alt2_origin + @b_price * $alt2_price ;
+#           U_3 = 0 ;
+#   "
 
 
 
@@ -65,11 +70,11 @@ designname <- str_remove_all(designfile,"(.ngd|_)")  ## Make sure it designnames
 #plan(sequential)
 tictoc::tic()
 
-all_designs<- purrr::map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U_test) %>% 
+all_designs<- purrr::map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U) %>% 
   setNames(designname)
 
 
-#all_designs<- furrr::future_map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U_test, .options = furrr_options(seed = T)) %>% 
+#all_designs<- furrr::future_map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U, .options = furrr_options(seed = T)) %>% 
 #setNames(designname) ### Issue is somewhere here
 
 time <- tictoc::toc()
