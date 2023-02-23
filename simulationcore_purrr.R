@@ -19,6 +19,7 @@ library("furrr")
 library("purrr")
 library("ggplot2")
 library("formula.tools")
+  source("functions.R")
 }
 
 resps =330  # number of respondents
@@ -48,7 +49,7 @@ mnl_U_test <- "
   "  
 
 
-source("functions.R")
+
 
 
 
@@ -56,7 +57,7 @@ source("functions.R")
 designfile<-list.files("Designs/",full.names = F)
 designname <- str_remove_all(designfile,"(.ngd|_)")  ## Make sure it designnames to not contain file ending and "_", as the may cause issues when replace
 
-#go<-sim_choice(designfile = "designs/orth_seq.ngd", respondents = 180 ,no_sim = 20, mnl_U = mnl_U_test)
+
 
 
 
@@ -75,18 +76,22 @@ time <- tictoc::toc()
 
 print(time)
 
-powa <- lapply(all_designs, "[[", "power") 
-
-unlist(powa)
 
 
+powa <- map(all_designs, ~ .x$power)
 
 
-meandata <- lapply(all_designs, "[[", "coefs")
+
+
+summaryall <- as.data.frame(map(all_designs, ~.x$summary)) %>% 
+  select(!ends_with("vars")) %>% 
+  relocate(ends_with(c(".n", "mean","sd", "min" ,"max", "range" , "se" )))
+
+coefall <- map(all_designs, ~ .x$coefs)
 
 pat<-paste0("(",paste(designname,collapse = "|"),").") # needed to identify pattern to be replaced
 
-s<-as.data.frame(meandata) %>% 
+s<-as.data.frame(coefall) %>% 
   select(!matches("pval|run")) %>%
   rename_with(~ sub("est_b_", "", .x), everything()) %>%
   rename_with( ~ paste0(.,"_",stringr::str_extract(.,pat )), everything() ) %>%   # rename attributes for reshape part 1

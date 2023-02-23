@@ -10,7 +10,7 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
   
   
 
-   
+
 
   
   simulate_choices <- function(data=database) {  #the part in dataset that needs to be repeated in each run
@@ -27,7 +27,7 @@ sim_choice <- function(designfile, no_sim=10, respondents=330, mnl_U,utils=u ) {
       as.data.frame()
 
     
-    print(data)
+
     
     return(data)
     

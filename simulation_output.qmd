@@ -1,0 +1,73 @@
+---
+title: "Simulation experimental design"
+author: "Julian Sagebiel"
+date: "2023-01-05"
+format: html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r run_code, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+
+source("simulationcore_purrr.R" ,echo = TRUE)
+         
+
+
+```
+
+
+The simulation has `r resps` respondents and `r nosim` runs.
+
+
+
+
+
+
+
+```{r, eval=FALSE ,include=FALSE}
+
+designs_all <- readRDS("output/330_5000runs_4designs_mixl.RDS")
+
+```
+
+
+
+
+
+# Statistics and power
+
+
+Here you see the statistics of your parameters for the `r nosim` runs.
+
+```{r}
+kable(summaryall ,digits = 3) %>% kable_styling()
+```
+
+
+
+```{r}
+powa
+
+```
+
+## Illustration of simulated parameter values
+
+To facilitate interpretation and judgement of the different designs, you can plot the densities of simulated parameter values from the different experimental designs.
+
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+map(p,print)
+
+
+do.call(grid.arrange,p)
+```
+
+
+
