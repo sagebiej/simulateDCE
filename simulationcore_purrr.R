@@ -25,7 +25,7 @@ library("formula.tools")
 resps =330  # number of respondents
 nosim=5  # number of simulations to run (about 500 is minimum)
 
-# betacoefficients should not include "-"
+# beta coefficients should not include "-" and start with b
 basc = 0.5
 btilapia = -0.2
 bcichlids = -0.3
@@ -34,7 +34,7 @@ bkisumu = 0.1
 bprice = -0.1
 
 
-#place your utility functions here
+#place your utility functions here. Make sure all attributes start with "alt" 
 u<-list(
 v1 =V.1~ basc + btilapia*alt1.tilapia + bcichlids * alt1.cichlids + btoxin * alt1.toxin + bkisumu * alt1.origin + bprice * alt1.price,
 v2 =V.2~ basc + btilapia*alt2.tilapia + bcichlids * alt2.cichlids + btoxin * alt2.toxin + bkisumu * alt2.origin + bprice * alt2.price,
@@ -66,16 +66,17 @@ designname <- str_remove_all(designfile,"(.ngd|_)")  ## Make sure it designnames
 
 
 
-#plan(multisession, workers = 8)
-#plan(sequential)
+
 tictoc::tic()
 
-all_designs<- purrr::map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U) %>% 
-  setNames(designname)
+# all_designs<- purrr::map(list.files("Designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U) %>% 
+#   setNames(designname)
 
 
-#all_designs<- furrr::future_map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U, .options = furrr_options(seed = T)) %>% 
-#setNames(designname) ### Issue is somewhere here
+#plan(sequential)
+all_designs<- furrr::future_map(list.files("designs/",full.names = T), sim_choice,no_sim= nosim,respondents = resps, mnl_U = mnl_U, 
+                                .options = furrr_options(seed = T ,globals = TRUE ) ) %>%
+setNames(designname) ### Issue is somewhere here
 
 time <- tictoc::toc()
 
